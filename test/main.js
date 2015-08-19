@@ -42,6 +42,22 @@ describe('gulp-nunjucks-render', function(){
         stream.end();
     });
 
+    it('should render a xhtml file', function(done){
+        var stream = nunjucksRender({ext: '.xhtml'});
+        var expected = getExpected('hello-world.xhtml');
+        var file = getFile('fixtures/hello-world.nunj');
+
+        stream.once('data', function(output) {
+            should.exist(output);
+            should.exist(output.contents);
+            path.extname(output.path).should.equal('.xhtml');
+            output.contents.toString().should.equal(expected);
+            done();
+        });
+        stream.write(file);
+        stream.end();
+    });
+
     it('should use nunjucks environment to resolve paths', function(done){
         var stream = nunjucksRender();
         var expected = getExpected('child.html');
